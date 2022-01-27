@@ -18,11 +18,11 @@ function mirror_gitpod() {
   local config_file="${1:=./config.yaml}"
 
   for row in $(./gitpod-installer mirror list --config ${config_file} | jq -c '.[]'); do
-    original=$(echo ${row} | jq -r '.original')
-    target=$(echo ${row} | jq -r '.target')
-    docker pull ${original}
-    docker tag ${original} ${target}
-    docker push ${target}
+    original=$(echo "${row}" | jq -r '.original')
+    target=$(echo "${row}" | jq -r '.target')
+    docker pull "${original}"
+    docker tag "${original}" "${target}"
+    docker push "${target}"
   done
 }
 
@@ -34,12 +34,12 @@ function generate_airgap() {
   # truncate and reset the push script
   echo "#!/bin/sh" > ./gitpod-push-mirror.sh
   for row in $(./gitpod-installer mirror list --config ${config_file} | jq -c '.[]'); do
-    local original=$(echo ${row} | jq -r '.original')
-    local target=$(echo ${row} | jq -r '.target')
-    docker pull ${original}
-    docker tag ${original} ${target}
+    local original=$(echo "${row}" | jq -r '.original')
+    local target=$(echo "${row}" | jq -r '.target')
+    docker pull "${original}"
+    docker tag "${original}" "${target}"
     echo "docker push ${target}" >> ./gitpod-push-mirror.sh
-    load_list+=( ${target} )
+    load_list+=( "${target}" )
   done
 
   echo "Saving the images to a tarball. This will take some time."
@@ -58,6 +58,6 @@ function generate_airgap() {
   echo "push script run on a host that has push access to the mirror repos."
   echo
   echo "  sh gitpod-push-mirror.sh"
-  docker save -o gitpod.tar ${load_list[*]}
+  docker save -o gitpod.tar "${load_list[@]}"
 
 }
