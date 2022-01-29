@@ -1,3 +1,4 @@
 gitpod-installer
 gitpod-push-mirror.sh
-config.yaml
+*.yaml
+*.sha256
