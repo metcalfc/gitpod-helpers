@@ -1,11 +1,29 @@
+
+function gitpod() {
+  # Set the version to use - see https://werft.gitpod-dev.com for available values
+  local GITPOD_INSTALLER_VERSION="${GITPOD_INSTALLER_VERSION:-release-2022.01.12}"
+
+  # Check docker is available
+  which docker > /dev/null || (echo "Docker not installed - see https://docs.docker.com/engine/install" && exit 1)
+
+  # Now, run the Installer
+  docker run -it --rm \
+      -v="${HOME}/.kube:${HOME}/.kube" \
+      -v="${PWD}:${PWD}" \
+      -w="${PWD}" \
+      "eu.gcr.io/gitpod-core-dev/build/installer:${GITPOD_INSTALLER_VERSION}" \
+      "${@}"
+}
+
+
 function get_gitpod() {
 
-  local gitpod_version="${1:=main.2278}"
+  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.01/gitpod-installer-linux-amd64
+  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.01/gitpod-installer-linux-amd64.sha256
+  sha256sum -c gitpod-installer-linux-amd64.sha256 || (echo "Checksum mismatch - aborting" && exit 1)
+  chmod +x gitpod-installer-linux-amd64
+  mv gitpod-installer-linux-amd64 ./gitpod-installer
 
-  docker create -ti --name installer "eu.gcr.io/gitpod-core-dev/build/installer:${gitpod_version}"
-
-  docker cp installer:/app/installer ./gitpod-installer
-  docker rm -f installer
 }
 
 function init_gitpod() {
