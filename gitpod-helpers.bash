@@ -27,13 +27,15 @@ function get_gitpod() {
 }
 
 function init_gitpod() {
-    local config_file="${1:=./config.yaml}"
-    ./gitpod-installer init > ${config_file}
+  local config_file="${PWD}/config.yaml"
+
+  ./gitpod-installer init > "${config_file}"
+  yq e -i ".repository = \"${1}\"" "${config_file}"
 }
 
 function mirror_gitpod() {
 
-  local config_file="${1:=./config.yaml}"
+  local config_file="${PWD}/config.yaml"
 
   for row in $(./gitpod-installer mirror list --config ${config_file} | jq -c '.[]'); do
     original=$(echo "${row}" | jq -r '.original')
@@ -46,7 +48,7 @@ function mirror_gitpod() {
 
 function generate_airgap() {
 
-  local config_file="${1:=./config.yaml}"
+  local config_file="${PWD}/config.yaml"
   local load_list=()
 
   # truncate and reset the push script
