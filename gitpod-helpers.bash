@@ -18,8 +18,8 @@ function gitpod() {
 
 function get_gitpod() {
 
-  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.01/gitpod-installer-linux-amd64
-  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.01/gitpod-installer-linux-amd64.sha256
+  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.02.0/gitpod-installer-linux-amd64
+  curl -fsSLO https://github.com/gitpod-io/gitpod/releases/download/2022.02.0/gitpod-installer-linux-amd64.sha256
   sha256sum -c gitpod-installer-linux-amd64.sha256 || (echo "Checksum mismatch - aborting" && exit 1)
   chmod +x gitpod-installer-linux-amd64
   mv gitpod-installer-linux-amd64 ./gitpod-installer
